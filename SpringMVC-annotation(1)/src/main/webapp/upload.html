@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="asserts/plugins/JQuery/jquery-3.6.0.min.js"></script>
+    <script>
+        $(function () {
+            $("#button_id").click(function () {
+                let file = $("#file")[0].files[0];
+                let formData = new FormData();
+                formData.append("file",file);
+                $.ajax({
+                    url:'/SpringMVC_annotation(1)/user/upload',
+                    data:formData,
+                    dataType:'json',
+                    type:"post",
+                    contentType:false,
+                    processData: false,
+                    success:function (respResult) {
+                        alert(respResult.msg);
+                    }
+                })
+            })
+        })
+    </script>
+</head>
+<body>
+    <input type="file" id="file"><br/>
+    <input type="button" value="上传" id="button_id">
+</body>
+</html>

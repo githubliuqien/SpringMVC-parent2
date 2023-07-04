@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录页面</title>
+    <script src="asserts/plugins/JQuery/jquery-3.6.0.min.js"></script>
+    <script>
+        $(function () {
+            $("#login_id").click( function () {
+                $.ajax({
+                    url:'/SpringMVC_annotation(1)/user/toLogin',
+                    data:{
+                        username:$("#username").val(),
+                        password:$("#password").val()
+                    },
+                    type:'get',
+                    dataType:'json',
+                    success:function (respResult) {
+                        alert(respResult.msg);
+                    }
+                })
+            })
+        })
+    </script>
+</head>
+<body>
+    用户名:<input type="text" id="username"><br/>
+    密码:<input type="text" id="password"><br/>
+    <input type="button" value="登录" id="login_id">
+</body>
+</html>

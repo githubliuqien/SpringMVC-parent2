@@ -1,0 +1,78 @@
+1.SpringMVC 注解
+    1.1 RestController
+            等同 Controller + ResponseBody
+            被 RestController 修饰的控制层，所有的方法都经过消息转换器
+
+    1.2 RequestMapping
+        1.2.1 value     --  约束请求的路径，可以传递数组
+        1.2.2 method    --  约束请求的提交方式，可以传递数组
+            HTTP 定义了与服务器交互的不同方式，规范使用4个：、
+                get:获取服务器数据，幂等值一致(一次请求和多次请求的结果一致)，查询使用 get
+                post:新增服务器数据,插入使用 post
+                put:更新服务器数据，修改使用 put
+                delete:删除服务器数据，删除使用 delete
+        1.2.3 params    --  约束请求的提交参数必须包含指定的参数，提交的参数可以多不能少
+
+    1.3 restful 风格注解
+        GetMapping、PostMapping、PutMapping、DeleteMapping
+
+2.文件上传
+    2.1 添加依赖
+        <dependencies>
+            <!--文件上传-->
+            <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>1.4</version>
+            </dependency>
+        </dependencies>
+    2.2 Spring 配置文件中添加文件上传的配置
+    2.3 创建接口方法添加注解
+        @RequestMapping，添加属性:consumes="multipart/*",headers="content-type=multipart/form-data"
+    2.4 方法添加 MultipartFile file 参数
+    2.5 根据参数通过 getOriginalFilename() 获取文件名
+        根据参数通过 transferTo() 进行文件拷贝
+
+3.Swagger
+    3.1 导入依赖
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+    3.2 配置 spring 的 xml 文件
+        <mvc:resources mapping="swagger-ui.html" location="classpath:/META-INF/resources"/>
+        <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars"/>
+    3.3 创建 Swagger 配置类 SwaggerConfiguration
+    3.4 添加注解
+        @Api(tags="用户模块")           --  模块注释
+        @ApiOperation("登录接口")       --  接口注释
+        @ApiModel                       --  实体类注释
+        @ApiModelProperty("用户名")     --  属性注释
+    3.5 启动项目访问 /swagger-ui.html
+
+4.SpringMVC 全局异常处理
+    4.1 创建全局异常处理类 HandlerException 添加注解 @ControllerAdvice @ResponseBody
+    4.2 添加异常处理方法,参数为要处理的异常
+        方法添加注解 @ExceptionHandler ，标记该方法为处理异常方法
+        value 值为针对某个异常处理的反射对象
+
+5.SpringMVC 拦截器
+    5.1 创建拦截器类 LoginInterceptor 实现 HandlerInterceptor 接口
+    5.2 重写拦截方法 preHandle() ,返回值为 true 代表放行，false 代表不放行
+    5.3 在 Spring 配置文件中添加拦截器栈，在拦截器栈中添加拦截器
+        拦截器配置中添加注册拦截器类，配置需要拦截的请求和不需要拦截的请求
+
+过滤器 vs 拦截器
+    1.拦截器基于 java 反射机制实现(Spring容器中),需要实现 HandlerInterceptor 接口
+   过滤器用于设置字符编码   过滤器基于 web 服务器，需要实现 Filter 接口
+    2.拦截器是在请求从 Servlet 访问 Controller 之前进行预处理
+      过滤器是请求到达 Servlet 之前进行预处理
+    3.过滤器可以改变请求，拦截器不能改变请求
+    4.拦截器用于登录验证，权限验证，日志记录，性能监控...
+      ，敏感词汇过滤..
